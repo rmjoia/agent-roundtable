@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # Copies the agent-roundtable framework into an existing project, without overwriting.
+# Also copies adapters/ and prompts/ so other assistants can read them locally.
 # Usage: scripts/install.sh <path-to-your-project> [--into-root]
 #   default: framework folders go to <project>/.roundtable/, commands to <project>/.claude/commands/
 #   --into-root: framework folders go to the project root (roles/, themes/, templates/, packs/)
@@ -10,7 +11,7 @@ DEST="${1:?usage: scripts/install.sh <project> [--into-root]}"
 TARGET="$DEST/.roundtable"; [ "${2:-}" = "--into-root" ] && TARGET="$DEST"
 
 mkdir -p "$TARGET" "$DEST/.claude/commands"
-for d in roles themes templates packs; do
+for d in roles themes templates packs adapters prompts; do
   if [ -e "$TARGET/$d" ] && [ "$TARGET" = "$DEST" ]; then
     echo "✗ $TARGET/$d already exists; use the default .roundtable/ location"; exit 1
   fi

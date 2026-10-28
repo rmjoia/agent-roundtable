@@ -2,6 +2,13 @@
 
 All notable changes to this template. Adopters see the entries newer than their version when they run `/sync-team`. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/): a role or template change that changes generated output is at least MINOR; a config-schema change that needs new answers is MAJOR.
 
+## [Unreleased]
+
+### Added
+- `prompts/bootstrap.md`: a prompt for setting up the team with any AI assistant (GitHub Copilot, ChatGPT, Cursor, Gemini …), which drafts an adapter at the end.
+- `adapters/`: the adapter contract and template, the Claude Code reference adapter and a generic `AGENTS.md` fallback.
+- `scripts/install.sh` also copies `adapters/` and `prompts/`.
+
 ## [0.1.0] - 2026-10-28
 
 ### Added
