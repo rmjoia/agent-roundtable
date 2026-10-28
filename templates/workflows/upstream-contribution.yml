@@ -1,0 +1,35 @@
+# DESIGN REFERENCE. Copy to .github/workflows/ in YOUR project only after reading docs/sync.md.
+# It proposes generic improvements from your project back to the agent-roundtable template.
+# Nothing leaves your repo without a human approving the PR it opens against the template.
+name: roundtable-upstream
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".claude/agents/**"
+      - "docs/team-roster.md"
+      - "docs/process/**"
+  workflow_dispatch: {}
+permissions:
+  contents: read
+jobs:
+  propose:
+    runs-on: ubuntu-latest
+    environment: upstream-contribution   # add required reviewers to this environment
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ secrets.ROUNDTABLE_UPSTREAM_TOKEN }}   # fine-grained: fork of the template only
+          prompt: |
+            Follow docs/sync.md → "Upstream contribution", step by step:
+            1. Diff the framework paths since the last upstream sync tag.
+            2. Keep only changes that are generic: drop anything about this project's product,
+               stack, cloud, people, identifiers or issue numbers.
+            3. Map every theme name back to its role id using team.config.yaml and the theme file.
+            4. Express the change against roles/*.md or templates/** in the template repo.
+            5. Run scripts/scrub-check.sh on the result; stop if it reports anything.
+            6. Open a draft PR against the template from the fork, with the rationale and the
+               retro finding that motivated the change. Never include raw project text.

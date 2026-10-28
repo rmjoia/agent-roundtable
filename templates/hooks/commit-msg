@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# agent-roundtable:generated template=commit-msg version={{template.version}}
+# Conventional Commits subject line. The Agent: trailer is checked only when present.
+msg_file="$1"
+subject="$(grep -v '^#' "$msg_file" | head -n1)"
+if ! grep -qE '^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\([a-z0-9._/-]+\))?!?: .+' <<< "$subject"; then
+  printf '\033[0;31m✗ Commit subject is not a Conventional Commit:\033[0m %s\n' "$subject"
+  echo "  e.g. feat(api): add order cancellation"
+  exit 1
+fi
+if grep -q '^Agent:' "$msg_file" && ! grep -qE '^Agent: [a-z][a-z0-9-]* \([^)]+\)$' "$msg_file"; then
+  printf '\033[0;31m✗ Malformed trailer.\033[0m Expected: Agent: <name> (<model>)\n'
+  exit 1
+fi

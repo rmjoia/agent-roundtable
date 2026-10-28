@@ -1,0 +1,21 @@
+# Copy to .github/workflows/sync-team.yml in YOUR project to pull agent-roundtable updates as a PR.
+name: sync-team
+on:
+  schedule: [{ cron: "0 6 * * 1" }]   # Mondays 06:00 UTC
+  workflow_dispatch: {}
+permissions:
+  contents: write
+  pull-requests: write
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: |
+            Run /sync-team --non-interactive.
+            Create branch chore/sync-team-<new template version>, commit the result with a
+            Conventional Commit message, push it, and open a PR whose body is the sync report.
+            If nothing changed, do nothing.
