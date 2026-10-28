@@ -1,0 +1,189 @@
+# JSON Schema (draft 2020-12), written in YAML, for team.config.yaml.
+# /init-team writes team.config.yaml; /sync-team and /init-team re-render from it.
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: https://github.com/rmjoia/agent-roundtable/team.config.schema.yaml
+title: agent-roundtable team configuration
+type: object
+additionalProperties: false
+required: [version, project, theme, roles]
+
+$defs:
+  slug: { type: string, pattern: "^[a-z][a-z0-9-]*$" }
+  tier: { enum: [fast, balanced, strong, strongest] }
+  glob_list:
+    type: array
+    items: { type: string, minLength: 1 }
+    description: Path globs relative to the repo root. A leading "!" excludes.
+  when:
+    enum: [always, code, behaviour, ui, product, contract, infra]
+    description: >-
+      always: every PR. code: changes code or tests (not docs-only). behaviour: changes what the
+      product does. ui: changes a user-facing surface. product: changes product rules, pricing or
+      user-facing claims. contract: changes a contract. infra: changes infra or pipelines.
+
+properties:
+  version: { const: 1 }
+
+  template:
+    type: object
+    additionalProperties: false
+    description: Where /sync-team pulls updates from.
+    properties:
+      repo: { type: string, default: rmjoia/agent-roundtable, description: "owner/name on GitHub" }
+      ref: { type: string, default: main, description: "Tag or branch last synced from" }
+      version: { type: string, description: "Template VERSION last rendered; written by /init-team" }
+
+  project:
+    type: object
+    additionalProperties: false
+    required: [name]
+    properties:
+      name: { type: string }
+      domain: { type: string, description: "One line: what the product does and for whom" }
+      regulatory: { type: string, description: "Law and standards that apply (e.g. GDPR, WCAG 2.2 AA)" }
+
+  owner:
+    type: object
+    additionalProperties: false
+    properties:
+      title: { type: string, default: the owner, description: "A role label, never a person's name" }
+
+  stack:
+    type: object
+    additionalProperties: false
+    description: Free text per layer; "none" when the layer doesn't exist.
+    properties:
+      frontend: { type: string }
+      backend: { type: string }
+      database: { type: string }
+      cloud: { type: string }
+      ci: { type: string }
+      unit: { type: string }
+      e2e: { type: string }
+
+  paths:
+    type: object
+    description: Values for {{paths.<key>}} in role lanes. Any key is allowed.
+    additionalProperties: { type: string }
+    properties:
+      frontend: { type: string }
+      i18n: { type: string }
+      e2e: { type: string }
+      domain: { type: string }
+      domain_tests: { type: string }
+      api: { type: string }
+      api_tests: { type: string }
+      adapters: { type: string }
+      contracts: { type: string }
+      email_templates: { type: string }
+      infra: { type: string }
+      scripts: { type: string }
+      specs: { type: string }
+      docs: { type: string }
+
+  theme:
+    type: string
+    description: A shipped theme id (themes/<id>.yaml) or local/<id> (themes/local/<id>.yaml).
+    pattern: "^(local/)?[a-z][a-z0-9-]*$"
+
+  models:
+    type: object
+    additionalProperties: false
+    description: Maps tiers to Claude Code model aliases.
+    properties:
+      fast: { type: string, default: haiku }
+      balanced: { type: string, default: sonnet }
+      strong: { type: string, default: opus }
+      strongest: { type: string, default: opus }
+
+  roles:
+    type: object
+    required: [architect]
+    propertyNames:
+      enum: [architect, product-owner, product-manager, security, qa, frontend, backend-domain,
+             backend-app, devops, docs, copy, marketing, steward]
+    additionalProperties:
+      type: object
+      additionalProperties: false
+      properties:
+        enabled: { type: boolean, default: true }
+        name: { type: string, description: "Overrides the theme's name for this role" }
+        tier: { $ref: "#/$defs/tier" }
+        lanes: { $ref: "#/$defs/glob_list" }
+        extra_lanes: { $ref: "#/$defs/glob_list", description: "Added to the role's default lanes" }
+    properties:
+      architect:
+        type: object
+        properties:
+          enabled: { const: true }
+
+  review_gates:
+    type: array
+    items:
+      type: object
+      additionalProperties: false
+      required: [id, reviewers, when]
+      properties:
+        id: { $ref: "#/$defs/slug" }
+        reviewers: { type: array, items: { type: string }, minItems: 1, description: "Role ids" }
+        when: { $ref: "#/$defs/when" }
+        lens: { type: string }
+
+  i18n:
+    type: object
+    additionalProperties: false
+    properties:
+      languages: { type: array, items: { type: string }, minItems: 1, description: "BCP 47 tags, e.g. en-GB, pt-PT" }
+      source: { type: string }
+
+  conventions:
+    type: object
+    additionalProperties: false
+    properties:
+      commits: { enum: [conventional, free], default: conventional }
+      branch: { type: string, default: "<type>/<issue>-<slug>" }
+      trailer: { type: string, default: "Agent: <name> (<model>)" }
+      push_policy:
+        enum: [owner-only, architect-on-merge-approval]
+        default: owner-only
+        description: >-
+          owner-only: agents and the architect never push; the owner pushes and opens PRs.
+          architect-on-merge-approval: the architect may push and open PRs, and merges only on the
+          owner's explicit "merge #N". Specialists never push in either mode.
+      size:
+        type: object
+        additionalProperties: false
+        properties:
+          soft_lines: { type: integer, default: 800 }
+          soft_files: { type: integer, default: 25 }
+          hard_lines: { type: integer, default: 1500 }
+          hard_files: { type: integer, default: 40 }
+
+  gates:
+    type: object
+    additionalProperties: false
+    properties:
+      pre_commit:
+        type: array
+        description: Rendered into scripts/git-hooks/pre-commit. A gate runs when a staged path matches.
+        items:
+          type: object
+          additionalProperties: false
+          required: [name, paths, run]
+          properties:
+            name: { type: string }
+            paths: { type: string, description: "Extended regex matched against staged paths" }
+            cwd: { type: string, default: "." }
+            run: { type: string }
+
+  retro:
+    type: object
+    additionalProperties: false
+    properties:
+      cadence: { type: string, default: weekly }
+      label: { type: string, default: retro }
+
+  packs:
+    type: array
+    items: { type: string }
+    default: [neutral]

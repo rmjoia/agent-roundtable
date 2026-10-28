@@ -1,0 +1,96 @@
+# An annotated example. /init-team writes your real team.config.yaml after its interview;
+# you rarely need to write one by hand. Schema: team.config.schema.yaml.
+version: 1
+
+template:
+  repo: rmjoia/agent-roundtable
+  ref: main
+
+project:
+  name: Example Shop
+  domain: An online shop for second-hand books, for readers in the EU.
+  regulatory: GDPR, ePrivacy, WCAG 2.2 AA
+
+owner:
+  title: the owner              # a role label, never a person's name
+
+stack:
+  frontend: React 19 + TypeScript + Vite
+  backend: Node.js 22 + Fastify
+  database: PostgreSQL 17
+  cloud: any container host
+  ci: GitHub Actions
+  unit: Vitest
+  e2e: Playwright
+
+paths:                          # resolve {{paths.*}} in the role lanes
+  frontend: web
+  i18n: web/src/locales
+  e2e: e2e
+  domain: api/src/domain
+  domain_tests: api/test/domain
+  api: api/src/http
+  adapters: api/src/adapters
+  api_tests: api/test/http
+  contracts: contracts
+  email_templates: api/templates/email
+  infra: infra
+  scripts: scripts
+  specs: specs
+  docs: docs
+
+theme: greek                    # or local/<id> for themes/local/<id>.yaml
+
+models:                         # tier → Claude Code model alias
+  fast: haiku
+  balanced: sonnet
+  strong: opus
+  strongest: opus               # set to your strongest available model
+
+roles:
+  architect:       { enabled: true }
+  product-owner:   { enabled: true }
+  product-manager: { enabled: false }
+  security:        { enabled: true, tier: strongest }
+  qa:              { enabled: true }
+  frontend:        { enabled: true }
+  backend-domain:  { enabled: true }
+  backend-app:     { enabled: true, extra_lanes: ["api/package.json"] }
+  devops:          { enabled: true }
+  docs:            { enabled: true, tier: balanced }
+  copy:            { enabled: true }
+  marketing:       { enabled: false }
+  steward:         { enabled: true, tier: balanced }
+
+review_gates:
+  - { id: self-review,    reviewers: [architect],      when: always,    lens: "self-review lens, design and contract" }
+  - { id: security,       reviewers: [security],       when: always,    lens: "OWASP Top 10 and data protection" }
+  - { id: plan-alignment, reviewers: [product-owner],  when: always,    lens: "story, acceptance criteria, Definition of Done" }
+  - { id: test-quality,   reviewers: [qa],             when: code,      lens: "tests prove behaviour; pyramid; impacted tests" }
+  - { id: docs,           reviewers: [docs],           when: behaviour, lens: "docs delta matches the change" }
+  - { id: usability,      reviewers: [frontend, copy], when: ui,        lens: "real-browser walk: narrow and desktop, keyboard, every language" }
+  - { id: contract,       reviewers: [],               when: contract,  lens: "the consuming role reviews" }
+
+i18n:
+  languages: [en-GB, de-DE]
+  source: en-GB
+
+conventions:
+  commits: conventional
+  branch: "<type>/<issue>-<slug>"
+  trailer: "Agent: <name> (<model>)"
+  push_policy: owner-only
+  size: { soft_lines: 800, soft_files: 25, hard_lines: 1500, hard_files: 40 }
+
+gates:
+  pre_commit:
+    - { name: "web: lint",   paths: "^web/",  cwd: web, run: "npm run lint" }
+    - { name: "web: test",   paths: "^web/",  cwd: web, run: "npx vitest run" }
+    - { name: "api: build",  paths: "^api/",  cwd: api, run: "npm run build" }
+    - { name: "api: test",   paths: "^api/",  cwd: api, run: "npx vitest run" }
+
+retro:
+  cadence: weekly
+  label: retro
+
+packs: [neutral]
