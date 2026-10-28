@@ -14,12 +14,6 @@ REPO_ROOT="$(git rev-parse --show-toplevel)"
 STAGED="$(git diff --cached --name-only --diff-filter=ACMRD)"
 [ -z "$STAGED" ] && exit 0
 
-# name | extended regex on staged paths | working dir | command
-# agent-roundtable:gates:start
-GATES=(
-{{gates_rows}}
-)
-# agent-roundtable:gates:end
 
 red() { printf '\033[0;31m%s\033[0m\n' "$*"; }
 green() { printf '\033[0;32m%s\033[0m\n' "$*"; }
@@ -44,13 +38,12 @@ else
   green "✓ No secrets or identifiers in staged changes"
 fi
 
-for gate in "${GATES[@]}"; do
-  IFS='|' read -r name pattern cwd cmd <<< "$gate"
-  name="$(echo "$name" | xargs)"; pattern="$(echo "$pattern" | xargs)"
-  cwd="$(echo "$cwd" | xargs)"; cmd="$(echo "$cmd" | sed 's/^ *//')"
-  grep -qE -- "$pattern" <<< "$STAGED" || continue
+# gate <name> <extended regex on staged paths> <working dir> <command>
+gate() {
+  local name="$1" pattern="$2" cwd="$3" cmd="$4" log
+  grep -qE -- "$pattern" <<< "$STAGED" || return 0
   yellow "▶ $name"
-  log="$LOG_DIR/$(echo "$name" | tr -c 'a-zA-Z0-9' '_').log"
+  log="$LOG_DIR/$(tr -c 'a-zA-Z0-9' '_' <<< "$name").log"
   if (cd "$REPO_ROOT/$cwd" && bash -c "$cmd") > "$log" 2>&1; then
     green "✓ $name"
   else
@@ -58,7 +51,11 @@ for gate in "${GATES[@]}"; do
     tail -25 "$log"
     FAILED=1
   fi
-done
+}
+
+# agent-roundtable:gates:start
+{{gates_rows}}
+# agent-roundtable:gates:end
 
 if [ "$FAILED" -ne 0 ]; then
   red "Commit blocked: fix the failures above and run the gates before committing."
