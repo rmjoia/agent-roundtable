@@ -1,0 +1,97 @@
+# Written by /init-team. Change answers here and re-run /init-team. Schema: team.config.schema.yaml.
+version: 1
+
+template:
+  repo: rmjoia/agent-roundtable
+  ref: main
+  version: "0.1.0"
+
+project:
+  name: Tidewater Library
+  domain: A web app for a community lending library, where members borrow books and tools.
+  regulatory: GDPR, ePrivacy, WCAG 2.2 AA
+
+owner:
+  title: the owner
+
+stack:
+  frontend: React 19 + TypeScript + Vite
+  backend: Node.js 22 + Fastify + TypeScript
+  database: PostgreSQL 17
+  cloud: any container host
+  ci: GitHub Actions
+  unit: Vitest
+  e2e: Playwright
+
+paths:
+  frontend: web
+  i18n: web/src/locales
+  e2e: e2e
+  domain: api/src/domain
+  domain_tests: api/test/domain
+  api: api/src/http
+  adapters: api/src/adapters
+  api_tests: api/test/http
+  contracts: contracts
+  infra: infra
+  scripts: scripts
+  docs: docs
+
+theme: greek
+
+models:
+  fast: haiku
+  balanced: sonnet
+  strong: opus
+  strongest: opus
+
+roles:
+  architect:       { enabled: true }
+  product-owner:   { enabled: true }
+  product-manager: { enabled: false }
+  security:        { enabled: true, tier: strongest }
+  qa:              { enabled: true }
+  frontend:        { enabled: true }
+  backend-domain:  { enabled: true }
+  backend-app:     { enabled: true, extra_lanes: ["api/src/server.ts", "api/package.json", "api/tsconfig.json"] }
+  devops:          { enabled: true, extra_lanes: [".gitignore"] }
+  docs:            { enabled: true, tier: balanced, extra_lanes: ["docs/architecture.md", "README.md"] }
+  copy:            { enabled: true }
+  marketing:       { enabled: false }
+  steward:         { enabled: true, tier: balanced }
+
+review_gates:
+  - { id: architect-review, label: Architecture and contract, reviewers: [architect], when: always, lens: "the design, the contract, lane boundaries; the self-review lens on every delta" }
+  - { id: security,       reviewers: [security],              when: always,    lens: "OWASP Top 10 and data protection" }
+  - { id: plan-alignment, reviewers: [product-owner],         when: always,    lens: "story, acceptance criteria, Definition of Done" }
+  - { id: test-quality,   reviewers: [qa],                    when: code,      lens: "tests prove behaviour; pyramid; impacted tests" }
+  - { id: docs,           reviewers: [docs],                  when: behaviour, lens: "docs delta matches the change" }
+  - { id: usability,      reviewers: [frontend, copy],        when: ui,        lens: "real-browser walk: narrow and desktop, keyboard, every language" }
+  - { id: contract,       reviewers: [consumer],       when: contract,  lens: "the consumer builds against it and its golden examples" }
+  - { id: infra,          reviewers: [devops],                when: infra,     lens: "pipeline duration, CI minutes, cost, least privilege" }
+
+i18n:
+  languages: [en-GB, es-ES]
+  source: en-GB
+
+conventions:
+  commits: conventional
+  branch: "<type>/<issue>-<slug>"
+  trailer: "Agent: <name> (<model>)"
+  push_policy: owner-only
+  size: { soft_lines: 800, soft_files: 25, hard_lines: 1500, hard_files: 40 }
+
+gates:
+  pre_commit:
+    - { name: "web: lint",  paths: "^web/", cwd: web, run: "npm run lint" }
+    - { name: "web: test",  paths: "^web/", cwd: web, run: "npx vitest run" }
+    - { name: "web: build", paths: "^web/", cwd: web, run: "npx tsc -b" }
+    - { name: "api: lint",  paths: "^api/", cwd: api, run: "npm run lint" }
+    - { name: "api: test",  paths: "^api/", cwd: api, run: "npx vitest run" }
+    - { name: "api: build", paths: "^api/", cwd: api, run: "npm run build" }
+
+retro:
+  cadence: weekly
+  label: retro
+
+packs: [neutral]

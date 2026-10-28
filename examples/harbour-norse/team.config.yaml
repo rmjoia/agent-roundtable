@@ -1,0 +1,100 @@
+# Written by /init-team (agent-roundtable). Schema: team.config.schema.yaml.
+# Change answers here and re-run /init-team --rerender.
+version: 1
+
+template:
+  repo: rmjoia/agent-roundtable
+  ref: main
+  version: "0.1.0"
+
+project:
+  name: Harbour Ledger
+  domain: Invoicing and berth booking for small marinas, for harbour masters and marina office staff.
+  regulatory: GDPR, EU consumer law, WCAG 2.2 AA, EN 16931 e-invoicing
+
+owner:
+  title: the owner
+
+stack:
+  frontend: Angular 19 + TypeScript
+  backend: .NET 9 (ASP.NET Core minimal API)
+  database: PostgreSQL via EF Core
+  cloud: Azure (Bicep)
+  ci: GitHub Actions
+  unit: xUnit (back end), Karma + Jasmine (front end)
+  e2e: Playwright
+
+paths:
+  frontend: frontend
+  i18n: frontend/src/assets/i18n
+  e2e: frontend/e2e
+  domain: backend/src/HarbourLedger.Core
+  domain_tests: backend/tests/HarbourLedger.Core.Tests
+  api: backend/src/HarbourLedger.Api
+  adapters: backend/src/HarbourLedger.Data
+  api_tests: backend/tests/HarbourLedger.Api.Tests
+  contracts: contracts
+  email_templates: none
+  infra: infra
+  scripts: scripts
+  specs: docs/specs
+  docs: docs
+
+theme: norse
+
+models:
+  fast: haiku
+  balanced: sonnet
+  strong: opus
+  strongest: opus
+
+roles:
+  architect:       { enabled: true }
+  product-owner:   { enabled: true }
+  product-manager: { enabled: true }
+  security:        { enabled: true, tier: strongest }
+  qa:              { enabled: true }
+  frontend:        { enabled: true }
+  backend-domain:  { enabled: true }
+  backend-app:     { enabled: true, extra_lanes: ["backend/*.sln"] }
+  devops:          { enabled: true }
+  docs:            { enabled: true, extra_lanes: ["docs/README.md"] }
+  copy:            { enabled: true }
+  marketing:       { enabled: true }
+  steward:         { enabled: true }
+
+review_gates:
+  - { id: architect-review, label: Architecture and contract, reviewers: [architect], when: always, lens: "the design, the contract, lane boundaries; the self-review lens on every delta" }
+  - { id: security,       reviewers: [security],              when: always,    lens: "OWASP Top 10 and data protection" }
+  - { id: plan-alignment, reviewers: [product-owner],         when: always,    lens: "story, acceptance criteria, Definition of Done" }
+  - { id: test-quality,   reviewers: [qa],                    when: code,      lens: "tests prove behaviour; pyramid; impacted tests" }
+  - { id: docs,           reviewers: [docs],                  when: behaviour, lens: "docs delta matches the change" }
+  - { id: usability,      reviewers: [frontend, copy],        when: ui,        lens: "real-browser walk: narrow and desktop, keyboard, every language" }
+  - { id: product,        reviewers: [product-manager],       when: product,   lens: "product rules, pricing and user-facing claims" }
+  - { id: contract,       reviewers: [consumer],       when: contract,  lens: "the consumer builds against it and its golden examples" }
+  - { id: infra,          reviewers: [devops],                when: infra,     lens: "pipeline and infra impact, cost and duration" }
+
+i18n:
+  languages: [en-GB, nb-NO]
+  source: en-GB
+
+conventions:
+  commits: conventional
+  branch: "<type>/<issue>-<slug>"
+  trailer: "Agent: <name> (<model>)"
+  push_policy: architect-on-merge-approval
+  size: { soft_lines: 800, soft_files: 25, hard_lines: 1500, hard_files: 40 }
+
+gates:
+  pre_commit:
+    - { name: "backend: build",  paths: "^backend/",  cwd: backend,  run: "dotnet build --nologo -warnaserror" }
+    - { name: "backend: test",   paths: "^backend/",  cwd: backend,  run: "dotnet test --nologo --filter \"Category!=Integration\"" }
+    - { name: "frontend: lint",  paths: "^frontend/", cwd: frontend, run: "CI=1 npx ng lint" }
+    - { name: "frontend: build", paths: "^frontend/", cwd: frontend, run: "CI=1 npx ng build" }
+    - { name: "frontend: test",  paths: "^frontend/", cwd: frontend, run: "CI=1 npx ng test --watch=false" }
+
+retro:
+  cadence: fortnightly
+  label: retro
+
+packs: [neutral, dotnet-angular]
