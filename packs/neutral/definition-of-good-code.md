@@ -16,6 +16,14 @@ Every agent and contributor writes code that meets this bar **as it is written**
 12. **Follows the design system.** The project's UI primitives and tokens; no one-off styles.
 13. **Boy-scout rule.** Whatever you touch, or find broken next to it, leaves cleaner. Fix it in the same PR within the size limits; anything larger is filed as an issue now, never left silent.
 
+## Working with existing code
+
+Most changes land in code that already exists, often without tests (Michael Feathers, *Working Effectively with Legacy Code*).
+- **Characterise before you change.** Code with no tests gets characterisation tests that pin what it does today, before any change.
+- **Find or make a seam.** Break a dependency at the smallest point that lets the code run under test (extract an interface, inject a parameter, wrap a static) instead of rewriting around it.
+- **Refactor in small, behaviour-preserving steps**, each one green (Martin Fowler, *Refactoring*). Never refactor and change behaviour in the same commit.
+- **Sprout or wrap** new behaviour in new, tested code when the old code can't be tested yet, and leave a seam for the next change.
+
 ## Engineering principles
 
 - **Adapters translate, never decide.** An adapter that re-derives an answer the core already knows is a defect, even when the dependency arrow points the right way.
@@ -25,3 +33,18 @@ Every agent and contributor writes code that meets this bar **as it is written**
 - **Use the project's gates as they are.** Never substitute a hand-rolled check for lint, coverage or the project's scripts.
 - **Agents install nothing** outside the project's manifests and pinned tools, and fetch nothing from the web unless the brief says so. New tooling is its own PR.
 - **Incremental.** Change methods, don't rewrite files. A scope that grows becomes a new branch and PR.
+
+## Influences
+
+The bar above stands on these. Read them; cite them in reviews.
+
+- **Robert C. Martin**: *Clean Code*, *Clean Architecture*, *Agile Software Development: Principles, Patterns, and Practices* (SOLID).
+- **Kent Beck**: *Test-Driven Development: By Example*, *Extreme Programming Explained*, *Tidy First?*.
+- **Martin Fowler**: *Refactoring*, *Patterns of Enterprise Application Architecture*.
+- **Michael Feathers**: *Working Effectively with Legacy Code*.
+- **Mark Seemann**: *Dependency Injection Principles, Practices, and Patterns* (with Steven van Deursen), *Code That Fits in Your Head*.
+- **Steve Freeman and Nat Pryce**: *Growing Object-Oriented Software, Guided by Tests*.
+- **Eric Evans**: *Domain-Driven Design*. **Alistair Cockburn**: hexagonal architecture (ports and adapters).
+- **Gamma, Helm, Johnson and Vlissides**: *Design Patterns*.
+- **Dave Farley and Jez Humble**: *Continuous Delivery*; Dave Farley, *Modern Software Engineering*.
+- **Andrew Hunt and David Thomas**: *The Pragmatic Programmer*.

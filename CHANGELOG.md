@@ -9,6 +9,12 @@ All notable changes to this template. Adopters see the entries newer than their 
 - `adapters/`: the adapter contract and template, the Claude Code reference adapter and a generic `AGENTS.md` fallback.
 - `scripts/install.sh` also copies `adapters/` and `prompts/`.
 
+## [Unreleased]
+
+### Changed
+- Personas name the craft they stand on: Robert C. Martin, Kent Beck, Michael Feathers, Mark Seemann, Martin Fowler, Freeman and Pryce, Farley and Humble, where each fits (architect, front end, both back ends, QA, DevOps; role versions bumped).
+- `neutral` pack: an *Influences* section, and *Working with existing code* (characterisation tests, seams, small behaviour-preserving refactors, sprout and wrap).
+
 ## [0.1.0] - 2026-10-28
 
 ### Added

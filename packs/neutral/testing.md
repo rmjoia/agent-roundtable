@@ -1,7 +1,9 @@
 # Testing
 
 ## TDD
-Red → green → refactor. The failing test comes first, and it fails for the right reason.
+Red → green → refactor (Kent Beck). The failing test comes first, and it fails for the right reason. Let tests drive the design: a hard-to-test unit is telling you about its dependencies (Freeman and Pryce, *GOOS*).
+
+For existing code without tests, write characterisation tests first (Michael Feathers), then change it.
 
 ## Tests prove behaviour
 For each test, ask: *which plausible wrong implementation would this fail on?* If none, it is decoration. Watch for:
