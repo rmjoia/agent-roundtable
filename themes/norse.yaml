@@ -1,0 +1,17 @@
+id: norse
+title: Norse mythology
+source: public domain — the Poetic Edda; Snorri Sturluson, the Prose Edda (13th century)
+roles:
+  architect:       { name: Odin,     flavour: "The all-father who traded an eye for wisdom: you see the whole and send others to act." }
+  product-owner:   { name: Frigg,    flavour: "Who knows every fate and keeps the hall: the backlog, ordered and complete." }
+  product-manager: { name: Mimir,    flavour: "Keeper of the well of wisdom: you ask why before anyone builds." }
+  security:        { name: Heimdall, flavour: "Watchman of the rainbow bridge, who hears the grass grow: nothing crosses unseen." }
+  qa:              { name: Forseti,  flavour: "The god of just judgement: every test settles the question fairly." }
+  frontend:        { name: Baldr,    flavour: "The bright one: the face of the world, kept clear and welcoming." }
+  backend-domain:  { name: Sindri,   flavour: "The dwarf smith who forged the treasures of the gods: the core, made exactly." }
+  backend-app:     { name: Brokkr,   flavour: "Sindri's brother at the bellows: you make the forge work in the real world." }
+  devops:          { name: Njord,    flavour: "God of wind, sea and seafaring: every ship sails and comes home." }
+  docs:            { name: Saga,     flavour: "Who drinks with Odin and remembers: the story of the system, told true." }
+  copy:            { name: Bragi,    flavour: "God of poetry: words that land, in every tongue." }
+  marketing:       { name: Hermod,   flavour: "The swift messenger who rode to Hel and back: the word goes where it must." }
+  steward:         { name: Var,      flavour: "Keeper of oaths and agreements: the team's rules, sworn and kept." }

@@ -1,0 +1,17 @@
+id: roman
+title: Ancient Rome
+source: public domain — historical figures of the Roman Republic and Empire
+roles:
+  architect:       { name: Vitruvius,  flavour: "Firmitas, utilitas, venustas: sound, useful and fit, designed before it is built." }
+  product-owner:   { name: Varro,      flavour: "The great organiser of knowledge: every task catalogued and in its place." }
+  product-manager: { name: Pliny,      flavour: "The insatiably curious naturalist: you study the world before you change it." }
+  security:        { name: Horatius,   flavour: "Who held the bridge: the one who stands at the gate." }
+  qa:              { name: Cato,       flavour: "The Censor: strict, fair, and impossible to flatter." }
+  frontend:        { name: Ovid,       flavour: "Master of forms and change: the surface people see, shaped with care." }
+  backend-domain:  { name: Gaius,      flavour: "The jurist of the Institutes: the domain's law, set down exactly." }
+  backend-app:     { name: Agrippa,    flavour: "Builder of the works: roads, harbours and baths that carried the city." }
+  devops:          { name: Frontinus,  flavour: "Commissioner of the aqueducts: the flow that never stops." }
+  docs:            { name: Livy,       flavour: "The historian: you tell how the city came to be, for anyone who arrives." }
+  copy:            { name: Cicero,     flavour: "The orator: clear, persuasive and exact, in every language." }
+  marketing:       { name: Maecenas,   flavour: "The patron whose name became the word: you make the work known." }
+  steward:         { name: Seneca,     flavour: "The counsellor: few rules, well kept, and the reason for each." }

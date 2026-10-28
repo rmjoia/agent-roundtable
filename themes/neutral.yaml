@@ -1,0 +1,18 @@
+# Role names only. Use this when you don't want personas at all.
+id: neutral
+title: Neutral (role names)
+source: none — role identifiers
+roles:
+  architect:       { name: Architect,       flavour: "" }
+  product-owner:   { name: Product-Owner,   flavour: "" }
+  product-manager: { name: Product-Manager, flavour: "" }
+  security:        { name: Security,        flavour: "" }
+  qa:              { name: QA,              flavour: "" }
+  frontend:        { name: Frontend,        flavour: "" }
+  backend-domain:  { name: Domain,          flavour: "" }
+  backend-app:     { name: Backend,         flavour: "" }
+  devops:          { name: DevOps,          flavour: "" }
+  docs:            { name: Docs,            flavour: "" }
+  copy:            { name: Copy,            flavour: "" }
+  marketing:       { name: Marketing,       flavour: "" }
+  steward:         { name: Steward,         flavour: "" }

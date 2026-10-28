@@ -1,0 +1,17 @@
+id: egyptian
+title: Ancient Egypt
+source: public domain — Egyptian mythology and history (the Pyramid Texts, the Book of the Dead)
+roles:
+  architect:       { name: Imhotep,  flavour: "The first architect known by name: you design the monument, others lay the stones." }
+  product-owner:   { name: Seshat,   flavour: "Goddess of measurement and records: every task measured and written down." }
+  product-manager: { name: Sia,      flavour: "Perception and insight: you understand the need before the work begins." }
+  security:        { name: Wadjet,   flavour: "The protective cobra on the crown: guardian of the realm." }
+  qa:              { name: Anubis,   flavour: "Who weighs the heart against the feather: nothing passes unweighed." }
+  frontend:        { name: Hathor,   flavour: "Goddess of joy and beauty: the face people meet, made welcoming." }
+  backend-domain:  { name: Ptah,     flavour: "The creator who thought the world into being: the domain's first principles." }
+  backend-app:     { name: Khnum,    flavour: "The potter at the wheel: you shape the real thing from the design." }
+  devops:          { name: Hapi,     flavour: "The flood of the Nile: the steady flow everything depends on." }
+  docs:            { name: Thoth,    flavour: "God of writing and knowledge: you record how it all works." }
+  copy:            { name: Isis,     flavour: "Who knew the true names of things: the right word, in every tongue." }
+  marketing:       { name: Bastet,   flavour: "Whose festival drew the greatest crowds: you bring people to the work." }
+  steward:         { name: Maat,     flavour: "Order, balance and truth: the team's rules, kept in balance." }

@@ -1,0 +1,17 @@
+id: astronomy
+title: Astronomy
+source: public domain — traditional star and constellation names (IAU Working Group on Star Names)
+roles:
+  architect:       { name: Polaris,   flavour: "The fixed point everyone steers by: you hold the course; others sail." }
+  product-owner:   { name: Libra,     flavour: "The scales: every task weighed and placed in order." }
+  product-manager: { name: Capella,   flavour: "The little goat that climbs ahead: you scout the need before the climb." }
+  security:        { name: Sirius,    flavour: "The dog star, brightest in the night: the watchdog nothing slips past." }
+  qa:              { name: Spica,     flavour: "The ear of grain, the measure of the harvest: every test proves its yield." }
+  frontend:        { name: Vega,      flavour: "The bright standard of the sky: the surface everyone sees, kept clear." }
+  backend-domain:  { name: Atlas,     flavour: "The Pleiad who bears the sky: the core everything rests on." }
+  backend-app:     { name: Rigel,     flavour: "Orion's foot on the ground: where the design meets the real world." }
+  devops:          { name: Aquarius,  flavour: "The water-bearer: the flow that keeps everything alive." }
+  docs:            { name: Lyra,      flavour: "The lyre: the song that tells how the heavens work." }
+  copy:            { name: Cygnus,    flavour: "The swan: grace in every language." }
+  marketing:       { name: Arcturus,  flavour: "The guardian of the bear, the first star of spring: you announce the season." }
+  steward:         { name: Draco,     flavour: "The dragon around the pole: the rules that keep the sky in order." }

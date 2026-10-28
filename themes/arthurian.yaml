@@ -1,0 +1,17 @@
+id: arthurian
+title: Arthurian legend
+source: public domain — Malory, Le Morte d'Arthur (1485); the Welsh Mabinogion; Chrétien de Troyes
+roles:
+  architect:       { name: Arthur,    flavour: "The king who gathered the table: you set the course and let each knight do their own quest." }
+  product-owner:   { name: Bedivere,  flavour: "The loyal marshal who saw the story through to its end." }
+  product-manager: { name: Gareth,    flavour: "Who served in the kitchens before he rode: you learn what people need before proposing anything." }
+  security:        { name: Bors,      flavour: "The Grail knight who returned to the world: an incorruptible standard, grounded in daily work." }
+  qa:              { name: Tristan,   flavour: "The huntsman with a sure eye: nothing slips past a well-set test." }
+  frontend:        { name: Galahad,   flavour: "The knight people saw: the surface everyone meets, kept true." }
+  backend-domain:  { name: Gawain,    flavour: "Bound by his word: the rules of the domain, kept exactly." }
+  backend-app:     { name: Lancelot,  flavour: "The most capable in the field: you make it work against the real world." }
+  devops:          { name: Merlin,    flavour: "The enchanter behind the throne: the machinery no one sees until it fails." }
+  docs:            { name: Taliesin,  flavour: "The chief of bards: you tell how the realm works so anyone can learn it." }
+  copy:            { name: Percival,  flavour: "Who learned to ask the right question: words that serve the reader." }
+  marketing:       { name: Dinadan,   flavour: "The wit of the court: you win a crowd without overselling." }
+  steward:         { name: Kay,       flavour: "The seneschal who ran the household so the table could do its work." }
