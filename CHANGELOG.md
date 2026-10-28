@@ -8,6 +8,7 @@ All notable changes to this template. Adopters see the entries newer than their 
 - 13 canonical role templates (`roles/`); only the architect is required.
 - Themes: `neutral`, `arthurian`, `greek`, `roman`, `norse`, `egyptian`, `astronomy`; `themes/local/` for your own.
 - `team.config.yaml` schema and an annotated example.
+- `scripts/render.py`: a deterministic renderer (Python 3 + PyYAML) used by `/init-team` and `/sync-team`.
 - `/init-team`: a one-question-at-a-time interview that renders the team into a staging folder, shows the diff, and writes on approval; idempotent.
 - `/sync-team`: pulls template updates and re-renders, keeping names, lanes and local persona blocks.
 - `/self-review`: a read-only review of any diff against the self-review lens.

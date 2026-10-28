@@ -30,7 +30,8 @@ PRs are welcome: role fixes, new public-domain themes, stack packs, better templ
 - No project-specific rules.
 
 **Templates and commands** (`templates/`, `.claude/commands/`)
-- Re-generate the examples if the output changes (run `/init-team --rerender` in a copy of each example's sample project, or ask in the PR and a maintainer will).
+- Re-generate the examples if the output changes: `python3 -I scripts/render.py --framework . --repo <scratch copy> --config examples/<name>/team.config.yaml --out <scratch>/stage`, then copy the stage into `examples/<name>/` without `docs/conventions/`. Or ask in the PR and a maintainer will.
+- `scripts/render.py` is the specification of rendering; the prose in `/init-team` describes it and must agree with it.
 - Rendering must stay idempotent: the same config renders the same files.
 
 ## Contributing from your own project

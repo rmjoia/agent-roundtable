@@ -15,7 +15,7 @@ Run `/init-team` in Claude Code. It interviews you about your project, one quest
 
 It is extracted from a system running in production and generalised. Roles are canonical; names are a theme.
 
-> **Requirements:** Claude Code with a Claude subscription, an Anthropic API account or a supported cloud provider. The team runs on **subagents**, and they draw on your usage limits. A plan with generous limits (Max, Team, Enterprise) or API billing is recommended for daily use. See [requirements and cost](docs/requirements.md).
+> **Requirements:** Claude Code with a Claude subscription, an Anthropic API account or a supported cloud provider, and Python 3 with PyYAML for the renderer (without it, `/init-team` renders by hand). The team runs on **subagents**, and they draw on your usage limits. A plan with generous limits (Max, Team, Enterprise) or API billing is recommended for daily use. See [requirements and cost](docs/requirements.md).
 
 ---
 
@@ -143,7 +143,7 @@ No. Actions are disabled here, and the workflow files ship as inert templates un
 | `team.config.schema.yaml` | the config schema; `team.config.example.yaml` is an annotated example |
 | `docs/` | one page per concept |
 | `examples/` | generated output for two fictional projects |
-| `scripts/` | `install.sh`, `validate.sh`, `scrub-check.sh` |
+| `scripts/` | `render.py` (the renderer `/init-team` uses), `install.sh`, `validate.sh`, `scrub-check.sh` |
 
 ## License
 

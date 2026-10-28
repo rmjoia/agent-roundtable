@@ -5,7 +5,8 @@
 - **[Claude Code](https://code.claude.com/docs/en/overview)**, in the terminal, an IDE extension or the desktop app.
 - **An account that can run Claude Code**: a Claude subscription (Pro, Max, Team or Enterprise), an Anthropic Console (API) account, or a supported cloud provider (Amazon Bedrock, Google Vertex AI, Microsoft Foundry). See [pricing](https://claude.com/pricing) and the [third-party integrations](https://code.claude.com/docs/en/third-party-integrations) page.
 - **Git**, and the **GitHub CLI** (`gh`) if you want labels and PRs handled from the session.
-- `bash` for the generated hooks. Python 3 with PyYAML only for `scripts/validate.sh` when you contribute to the template.
+- **Python 3 with PyYAML** for `scripts/render.py`, which turns your config and the role templates into files the same way every time. Most machines that run AI tooling have it; if yours doesn't, `/init-team` offers to install PyYAML (`python3 -m pip install --user pyyaml`) or renders by hand from the same rules, which works but may vary slightly between runs.
+- `bash` for the generated hooks.
 
 ## This framework runs on subagents
 
