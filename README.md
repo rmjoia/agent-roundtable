@@ -62,6 +62,12 @@ curl -fsSL -o .claude/commands/init-team.md \
 
 **5. Start small.** On an existing codebase, enable the architect, security, QA and the one or two builders that match your stack first. Add roles later by editing `team.config.yaml` and re-running `/init-team`.
 
+## Use it with another assistant
+
+Built for Claude Code, but the team is plain Markdown and shell, so it can run elsewhere. Paste the **[bootstrap prompt](prompts/bootstrap.md)** into GitHub Copilot Chat, ChatGPT, Cursor, Gemini or any assistant that can read files. It reads this repo, checks what your assistant can actually do (separate agents, per-agent models, tool limits), runs the same interview, and maps the team onto your assistant. Where your assistant has no separate agents, it falls back to role files you open one chat at a time, and says what is lost.
+
+At the end, it drafts an **adapter** for your assistant. Please PR it back: see [adapters/](adapters/README.md) for the template and the assistants we'd love adapters for.
+
 ## What you get
 
 ```
@@ -120,7 +126,7 @@ Each specialist is a subagent run, and a reviewed change runs several. Every rol
 Yes. Only the architect is required. A disabled role's paths go to another role you choose, or stay with you; review gates that name it are dropped; hand-overs to it go to you. A two-person project might run architect, security, QA and one full-stack builder (`backend-app` with wider lanes).
 
 **Can I use it with GitHub Copilot or other agents?**
-Yes. The roster, briefs, lanes and gates are plain Markdown, so any agent or human can follow them. Point `.github/copilot-instructions.md` or `AGENTS.md` at `docs/team-roster.md`; a human or another assistant takes a lane like any agent and follows the same review gate. Copilot code review makes a useful extra reviewer: a different model family on the same diff.
+Yes: start with the [bootstrap prompt](prompts/bootstrap.md) and the [adapters](adapters/README.md). Beyond that, a mixed team works too. The roster, briefs, lanes and gates are plain Markdown, so any agent or human can follow them. Point `.github/copilot-instructions.md` or `AGENTS.md` at `docs/team-roster.md`; a human or another assistant takes a lane like any agent and follows the same review gate. Copilot code review makes a useful extra reviewer: a different model family on the same diff.
 
 **Does it need GitHub?**
 The issue and PR templates, labels and the backlog-as-shared-state flow assume GitHub. The agents, lanes, hooks and briefs work with any Git host; adapt the templates.
@@ -143,6 +149,8 @@ No. Actions are disabled here, and the workflow files ship as inert templates un
 | `team.config.schema.yaml` | the config schema; `team.config.example.yaml` is an annotated example |
 | `docs/` | one page per concept |
 | `examples/` | generated output for two fictional projects |
+| `prompts/` | the bootstrap prompt for other assistants |
+| `adapters/` | how the team maps onto each assistant; contributions welcome |
 | `scripts/` | `render.py` (the renderer `/init-team` uses), `install.sh`, `validate.sh`, `scrub-check.sh` |
 
 ## Support

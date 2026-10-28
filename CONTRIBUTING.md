@@ -29,6 +29,11 @@ PRs are welcome: role fixes, new public-domain themes, stack packs, better templ
 - Each rule is checkable and cites its upstream guide.
 - No project-specific rules.
 
+**An adapter** (`adapters/<assistant>.md`)
+- Follow the template in [adapters/README.md](adapters/README.md); cite the assistant's current docs and the version you tested.
+- Describe only features you verified; mark anything else as untested.
+- Update the status table in `adapters/README.md`.
+
 **Templates and commands** (`templates/`, `.claude/commands/`)
 - Re-generate the examples if the output changes: `python3 -I scripts/render.py --framework . --repo <scratch copy> --config examples/<name>/team.config.yaml --out <scratch>/stage`, then copy the stage into `examples/<name>/` without `docs/conventions/`. Or ask in the PR and a maintainer will.
 - `scripts/render.py` is the specification of rendering; the prose in `/init-team` describes it and must agree with it.

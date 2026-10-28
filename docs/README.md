@@ -9,3 +9,4 @@ One page per idea. Read them in order the first time.
 5. [Retro loop](retro-loop.md): feedback in every report, and how it changes the personas.
 6. [Sync](sync.md): pulling template updates down, and proposing improvements back up.
 7. [Requirements and cost](requirements.md): accounts, models and token use.
+8. [Other assistants](../adapters/README.md): running the team on Copilot, ChatGPT, Cursor and others.
