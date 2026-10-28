@@ -145,6 +145,10 @@ No. Actions are disabled here, and the workflow files ship as inert templates un
 | `examples/` | generated output for two fictional projects |
 | `scripts/` | `render.py` (the renderer `/init-team` uses), `install.sh`, `validate.sh`, `scrub-check.sh` |
 
+## Support
+
+If agent-roundtable saves your team time, you can [sponsor its development](https://github.com/sponsors/rmjoia). Issues, PRs and new public-domain themes help just as much.
+
 ## License
 
 [Apache-2.0](LICENSE). Contributions welcome: see [CONTRIBUTING.md](CONTRIBUTING.md) and the [Code of Conduct](CODE_OF_CONDUCT.md). Security issues: [SECURITY.md](SECURITY.md).
