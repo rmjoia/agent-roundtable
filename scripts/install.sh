@@ -19,6 +19,7 @@ for d in roles themes templates packs; do
   rm -rf "${TARGET:?}/$d"; mv "$TARGET/$d.tmp" "$TARGET/$d"
 done
 cp "$SRC/VERSION" "$SRC/team.config.schema.yaml" "$SRC/team.config.example.yaml" "$TARGET/"
+mkdir -p "$TARGET/scripts" && cp "$SRC/scripts/render.py" "$TARGET/scripts/render.py"
 for c in init-team sync-team self-review; do
   if [ -e "$DEST/.claude/commands/$c.md" ] && ! cmp -s "$SRC/.claude/commands/$c.md" "$DEST/.claude/commands/$c.md"; then
     echo "… $DEST/.claude/commands/$c.md exists and differs; kept yours, wrote $c.md.roundtable"

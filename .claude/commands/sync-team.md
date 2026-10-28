@@ -22,16 +22,17 @@ For the latest tag: `git ls-remote --tags --sort=-v:refname https://github.com/<
 If the upstream `VERSION` equals the current one, say "Already up to date (<version>)" and stop.
 
 ## Step 3: What changed upstream
-Read the upstream `CHANGELOG.md` entries newer than the current version and summarise them in five lines or fewer. Diff upstream against the local framework folder (`git diff --no-index`) for `roles/`, `templates/`, `packs/`, `themes/` (not `themes/local/`), `team.config.schema.yaml`, `VERSION`, and `.claude/commands/{init-team,sync-team,self-review}.md`.
+Read the upstream `CHANGELOG.md` entries newer than the current version and summarise them in five lines or fewer. Diff upstream against the local framework folder (`git diff --no-index`) for `roles/`, `templates/`, `packs/`, `themes/` (not `themes/local/`), `team.config.schema.yaml`, `VERSION`, `scripts/render.py`, and `.claude/commands/{init-team,sync-team,self-review}.md`.
 
 Call out:
 - roles whose `version` went up (their personas will change);
 - new config fields in the schema. For each, ask the owner for a value with the schema default offered, one question at a time; with `--non-interactive`, use the default;
+- with `--non-interactive`, a hand-written file is never replaced: render it with `--alongside`;
 - local edits to framework files (a framework file that differs from both the old and the new upstream). Never overwrite those silently: show the diff and ask whether to keep, take upstream, or merge by hand.
 
 ## Step 4: Update the framework and re-render
 1. In a staging copy of the repo, replace the framework files with upstream's, leaving `themes/local/` and any file the owner chose to keep.
-2. Re-render exactly as `/init-team` Step 4 describes, from `team.config.yaml` and the **new** framework, carrying over every `agent-roundtable:local` block.
+2. Re-render with the **new** `scripts/render.py`, exactly as `/init-team` Step 4 describes, from `team.config.yaml` and the **new** framework, carrying over every `agent-roundtable:local` block.
 3. Set `template.version` (and `template.ref`) in the staged `team.config.yaml`.
 
 ## Step 5: Diff and write

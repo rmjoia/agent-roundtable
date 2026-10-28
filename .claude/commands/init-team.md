@@ -15,18 +15,18 @@ Arguments: `$ARGUMENTS`
 
 ## Step 0: Find the framework
 
-The framework is these folders: `roles/`, `themes/`, `templates/`, `packs/`, plus `VERSION` and `team.config.schema.yaml`.
+The framework is these folders: `roles/`, `themes/`, `templates/`, `packs/`, plus `scripts/render.py`, `VERSION` and `team.config.schema.yaml`.
 
 1. Look at the repo root. If `roles/architect.md` is there, that is `FRAMEWORK`.
 2. Otherwise look in `.roundtable/`.
-3. Otherwise tell the owner the framework files are missing and offer: "Fetch them from github.com/rmjoia/agent-roundtable into `.roundtable/`?" On yes, run `git clone --depth 1 https://github.com/rmjoia/agent-roundtable <scratch>/roundtable` and copy `roles themes templates packs VERSION team.config.schema.yaml` into `.roundtable/`. On no, stop.
+3. Otherwise tell the owner the framework files are missing and offer: "Fetch them from github.com/rmjoia/agent-roundtable into `.roundtable/`?" On yes, run `git clone --depth 1 https://github.com/rmjoia/agent-roundtable <scratch>/roundtable` and copy `roles themes templates packs VERSION team.config.schema.yaml` and `scripts/render.py` into `.roundtable/` (keeping `scripts/`). On no, stop.
 
 Read every file in `FRAMEWORK/roles/`, the chosen theme later, and every template you render. Don't work from memory of them.
 
 ## Step 1: Existing state
 
 - If `team.config.yaml` exists, read it. Ask (one question): **Re-render from the current config**, **Change some answers**, or **Start over**. With `--rerender`, choose re-render. For "Change some answers", list the sections (project, stack, roles and lanes, theme, models, review gates, languages, conventions, gates) and ask which to revisit; interview only those.
-- Note which output files already exist (see Step 4) and whether each carries an `agent-roundtable:generated` marker. Files without the marker were written by people; you will merge or ask, never silently overwrite.
+- Note which output files already exist (see Step 4) and whether each carries an `agent-roundtable:generated` marker (`CLAUDE.md`: an `agent-roundtable:start` block). Files without one were written by people; you will merge or ask, never silently overwrite.
 
 ## Step 2: Look before you ask
 
@@ -51,7 +51,7 @@ Never ask for a person's name. The owner is a role: `owner.title` defaults to "t
 4. **Lanes.** For each enabled role, one question: show its default lanes resolved against the detected paths, and ask "Accept, or edit?". Fill `paths:` from the answers. Then check the lanes yourself: two roles must not own the same path (a `!` exclusion resolves an overlap); every source folder found in Step 2 should have an owner. Report any overlap or unowned path and ask how to resolve it.
 5. **Theme.** Offer the shipped themes (`neutral`, `arthurian`, `greek`, `roman`, `norse`, `egyptian`, `astronomy`), showing three example names from each, plus "my own" (then help write `themes/local/<id>.yaml`, following `themes/README.md`). Franchise names (film, TV, book franchises) are not offered; if asked, explain why (`themes/README.md`) and offer a local theme with original names.
 6. **Model tiers.** Show the default tier per role and the tier → model map (`fast: haiku, balanced: sonnet, strong: opus, strongest: opus`, with the strongest set to the strongest model the owner's plan offers). Principle: the cheapest tier that does the job right first time; security stays on `strongest`. Ask: accept, or change which roles or mappings?
-7. **Review gates.** Show the default matrix built from the enabled roles: self-review (architect, always), security (always), plan alignment (product-owner, always), test quality (qa, code changes), docs (docs, behaviour changes), usability (frontend + copy, UI changes), product (product-manager, product changes), contract (the consumer, contract changes), infra (devops, infra changes). Ask: accept, or change?
+7. **Review gates.** Show the default matrix built from the enabled roles: architecture and contract (architect, always), security (always), plan alignment (product-owner, always), test quality (qa, code changes), docs (docs, behaviour changes), usability (frontend + copy, UI changes), product (product-manager, product changes), contract (`consumer`: the agent that consumes the changed contract, contract changes), infra (devops, infra changes). Ask: accept, or change?
 8. **Languages.** If `copy` is enabled or translation files exist: the supported languages as BCP 47 tags with regional variants (`pt-PT`, not `pt`), and the source language.
 9. **Conventions.** Commit style (default Conventional Commits), branch pattern (default `<type>/<issue>-<slug>`), size limits (default 800 lines / 25 files soft, 1500 / 40 hard). Then, as a separate question, the push policy: `owner-only` (default: agents and the architect never push) or `architect-on-merge-approval` (the architect pushes and opens PRs; merges only on the owner's explicit "merge #N").
 10. **Gates.** Propose pre-commit gates from the stack (build, lint, unit tests per area, with a path regex and working dir), drawing on the stack pack's `gates.md` when there is one. Ask: accept, or edit?
@@ -62,89 +62,45 @@ Then show the complete `team.config.yaml` you will write and ask for a final OK,
 
 ## Step 4: Render into a staging folder
 
-Render everything into a staging folder in your scratchpad (never into the repo yet), mirroring the repo layout. Validate the config against `team.config.schema.yaml` first. If PyYAML and `jsonschema` are available, use them (`python3 -I`); otherwise check by reading the schema.
+Write the agreed config to `<scratch>/team.config.yaml` and render into a staging folder in your scratchpad, never into the repo:
 
-### Names
-For each enabled role: `Name` = `roles.<id>.name` if set, else the theme's name, else the `neutral` theme's. `name` (the slug) = `Name` lower-cased, accents stripped, non-alphanumerics → `-`. Slugs must be unique; if not, stop and ask.
-
-### Placeholders
-Replace every placeholder listed in `FRAMEWORK/roles/README.md`. Also:
-- `{{template.version}}` → the contents of `FRAMEWORK/VERSION`; `{{template.repo}}` → `template.repo`.
-- `{{role:<id>}}` → that role's display name. If the role is disabled: in a list item or table row that is only about that role, drop the line; in running text, use "{{owner}}" and keep the sentence true.
-- `{{role_slug:<id>}}` → that role's slug.
-- `{{lanes}}` → each lane glob, after resolving `{{paths.*}}`, as an indented bullet in code format (`  - \`web/**\``); exclusions as `  - except \`web/src/locales/**\``. Final lanes = `roles.<id>.lanes` if set, else the template's `default_lanes`; plus `extra_lanes`. A lane whose `{{paths.x}}` is undefined or "none" is dropped.
-- `{{hands_over}}` → one indented bullet per entry: `  - <what> → <Name>` (`"*"` means "→ its owner"). A hand-over to a disabled role becomes `→ {{owner}} (no owner yet)`.
-- `{{gates}}` → the pre-commit gates whose path regex overlaps the role's lanes, as indented bullets: `  - \`cd <cwd> && <run>\``. If none, `  - the project's checks for what you changed`.
-- `{{trailer}}` → the trailer pattern with this agent's slug and model, e.g. `Agent: hermes (opus)`. `{{trailer_example}}` → the pattern as written in the config.
-- `{{model}}` → `models[tier]` where tier = `roles.<id>.tier` or `default_tier`, never lower than `tier_floor`.
-- `{{shared_rules}}` → the contents of `FRAMEWORK/templates/shared-rules.md`.
-- `{{push_policy}}` (architect) → for `owner-only`: "You never push, open PRs or merge. When a branch is ready, give {{owner}} the summary and the exact commands; {{owner}} pushes, opens the PR and merges." For `architect-on-merge-approval`: "You push, open PRs and apply labels. You merge only on {{owner}}'s explicit \"merge #N\" for that PR; approval for one PR never extends to another. Specialists never push, open PRs or merge." `{{push_policy_short}}` (roster) → the first sentence of the same text, rewritten in the third person.
-- `{{packs_path}}` → `docs/conventions/neutral`.
-- `{{models.*}}`, `{{size.*}}`, `{{retro.*}}`, `{{stack.*}}`, `{{i18n.*}}` → from the config (defaults from the schema). A `stack.*` of "none" or unset renders as "the project's stack" in running text.
-- `<!-- render: … -->` lines are instructions to you: carry them out and remove them from the output.
-
-After rendering, `grep -n '{{' ` over the staging folder must find nothing. Fix any leftover before showing the diff.
-
-### Outputs
-
-| Output | From | Notes |
-|---|---|---|
-| `team.config.yaml` | the interview | |
-| `.claude/agents/<name>.md` | `roles/<id>.md`, one per enabled role except the architect | format below |
-| `CLAUDE.md` | `templates/claude-team-section.md.tmpl` | `{{architect_body}}` = the architect template's body, rendered. Insert or replace **only** the block between `<!-- agent-roundtable:start` and `<!-- agent-roundtable:end -->`. If `CLAUDE.md` doesn't exist, create it with a `# <project>` heading, a one-paragraph project summary and stack table from the config, then the block. |
-| `docs/team-roster.md` | `templates/team-roster.md.tmpl` | |
-| `docs/process/task-brief.md` | `templates/process/task-brief.md` | |
-| `docs/process/definition-of-done.md` | `templates/process/definition-of-done.md` | |
-| `docs/conventions/<pack>/**` | `packs/<pack>/**` | copied as-is |
-| `.github/PULL_REQUEST_TEMPLATE.md` | `templates/github/PULL_REQUEST_TEMPLATE.md` | |
-| `.github/ISSUE_TEMPLATE/{story,task,bug,retro-log}.md` | `templates/github/ISSUE_TEMPLATE/` | |
-| `scripts/git-hooks/pre-commit`, `commit-msg` | `templates/hooks/` | `{{gates_rows}}` = one line per gate: `gate "<name>" "<paths>" "<cwd>" "<run>"`, with `"`, `$` and backticks inside each value escaped for bash. Executable. |
-| `scripts/install-hooks.sh` | `templates/hooks/install-hooks.sh` | executable |
-
-Skip the usability line, the copy and i18n lines, etc., when the roles they name are disabled. If the commit style is not Conventional Commits, don't render `commit-msg`.
-
-### Agent file format
-
-```markdown
----
-name: <slug>
-description: <Title>. <summary from the role front matter, with role ids replaced by names>. Lanes: <first three lane globs>.
-model: <model>
-tools: Read, Grep, Glob, Bash, WebFetch, WebSearch        # only when the role is read_only
----
-<!-- agent-roundtable:generated role=<id> role_version=<version> template=<VERSION> — edit team.config.yaml or the local section below, then re-run /init-team -->
-
-<rendered body>
-
-<!-- agent-roundtable:local:start -->
-<!-- Project-specific additions for this agent go here; /init-team and /sync-team keep this block. -->
-<!-- agent-roundtable:local:end -->
+```bash
+python3 -I FRAMEWORK/scripts/render.py --framework FRAMEWORK --repo . \
+  --config <scratch>/team.config.yaml --out <scratch>/stage [--skip <path>]... [--alongside <path>]...
 ```
 
-If the agent file already exists, carry its `agent-roundtable:local` block over unchanged. If it exists **without** the generated marker, it was hand-written: show it to the owner and ask whether to replace it (moving its project-specific content into the local block) or keep it and skip this role.
+`render.py` is the reference renderer: deterministic, so a re-run with the same answers changes nothing. It needs Python 3 and PyYAML. If `import yaml` fails, ask the owner once: install it (`python3 -m pip install --user pyyaml`), or render by hand. For a hand render, follow the rules in `FRAMEWORK/roles/README.md` and do what `render.py` does, reading its source as the specification.
 
-### Existing files without a marker
-For `CLAUDE.md`, insert the block (above). For a PR template, issue templates or hooks that people wrote: show a side-by-side summary and ask per file: replace, keep theirs, or write ours next to it with a `.roundtable` suffix for a manual merge. For existing hooks, never drop a check they already run: offer to add it as a gate.
+`render.py` prints a JSON summary: the agents, the outputs, lane **overlaps**, and **notes** about existing hand-written files. It also sets `template.version` in the staged config. It stops on unrendered placeholders or duplicate agent names; fix the cause (usually a `roles.<id>.name` override) and run it again.
+
+### Existing files written by people
+Files without an `agent-roundtable:generated` marker (or, for `CLAUDE.md`, without the `agent-roundtable:start` / `end` block) were written by people:
+- **`CLAUDE.md`**: the renderer appends the team block at the end and never touches the rest. On later runs it replaces only the block.
+- **A hand-written agent file** with the same name as a generated one: show it, and ask: replace it (and offer to move its project-specific content into the new file's `agent-roundtable:local` block afterwards), or keep it (`--skip`).
+- **PR template, issue templates, hooks**: ask per file: replace, keep theirs (`--skip`), or write ours next to it for a manual merge (`--alongside`, which writes `<file>.roundtable`). For a hand-written hook, offer to carry each of its checks into `gates.pre_commit` first, so no check is dropped.
+
+Re-run `render.py` with the chosen flags. With `--non-interactive`, use `--alongside` for every hand-written file.
 
 ## Step 5: Show the diff
 
-1. A summary table: each output file, and whether it is **new**, **changed** or **unchanged**.
-2. The full diff for changed files (`git diff --no-index -- <repo file> <staged file>`), and the full content of new files, grouped: config, agents, CLAUDE.md, roster and process, templates, hooks.
-3. The lane table as rendered, and any overlaps or unowned paths.
+1. A summary table: each output, **new**, **changed** or **unchanged** (`diff -q` against the repo).
+2. The full diff for changed files (`git diff --no-index -- <repo file> <staged file>`) and the content of new files, grouped: config, agents, CLAUDE.md, roster and process, conventions, GitHub templates, hooks. Summarise `docs/conventions/**` by file instead of printing it.
+3. The lane table from the staged `docs/team-roster.md`, the overlaps from the summary, and any source folder from Step 2 that no lane covers.
 
 Ask: **Write these files**, **Change something** (back to the relevant question), or **Cancel**. With `--non-interactive`, write without asking.
 
-Re-running with the same answers must produce **no changes**. If it does, that's a bug in this render: say so.
+Re-rendering with the same answers must produce **no changes**. If it does, say so: it is a bug.
 
 ## Step 6: Write and check
 
-1. Copy the staged files into the repo. Make the hooks executable.
-2. Check: every agent file's front matter parses; every `{{role:` and `{{` is gone (`grep -rn '{{' .claude/agents docs/team-roster.md CLAUDE.md .github scripts/git-hooks`); `bash -n` on each hook; each lane in the roster matches the persona.
-3. Don't install the hooks, create labels, commit or push. Tell the owner the next steps:
-   - review the diff (`git status`, `git diff`) and commit it, e.g. `chore: set up the agent team (agent-roundtable <VERSION>)`;
+1. Copy the staged files into the repo (`cp -R <scratch>/stage/. .`). The hooks keep their executable bit.
+2. Check: every agent file's front matter parses (`python3 -I -c` with `yaml.safe_load`, or read it); no `{{` is left outside GitHub Actions expressions (`grep -rn '{{' .claude/agents docs/team-roster.md docs/process CLAUDE.md .github/PULL_REQUEST_TEMPLATE.md .github/ISSUE_TEMPLATE scripts/git-hooks`); `bash -n` on each hook.
+3. Don't install hooks, create labels, commit or push. Tell the owner the next steps:
+   - review the diff (`git status`, `git diff`) and commit it, for example `chore: set up the agent team (agent-roundtable <VERSION>)`;
    - run `bash scripts/install-hooks.sh`;
-   - create the `agent:<name>` and `reviewed:<name>` labels (offer the exact `gh label create` commands; run them only if the owner asks);
+   - add `.scrub-patterns.local` to `.gitignore`, and list in it the names that must never be pushed (product code names, internal domains, people);
+   - create the labels: `agent:<name>` and `reviewed:<name>` per agent, plus `type/story`, `type/task`, `type/bug` and `<retro.label>`. Offer the exact `gh label create` commands; run them only if the owner asks;
    - open the first `Retro log — <period>` issue;
-   - restart Claude Code (or run `/agents`) so the new agents load.
+   - restart Claude Code (or open `/agents`) so the new agents load.
 
 End with a five-line summary: the team (names and roles), the theme, the files written, and the one thing to do next.
