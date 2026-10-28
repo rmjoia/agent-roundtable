@@ -400,6 +400,8 @@ emit("scripts/install-hooks.sh", render(read(fw("templates", "hooks", "install-h
 
 leftovers = []
 for rel in outputs:
+    if rel == "team.config.yaml":
+        continue  # the owner's own text, copied as written
     text = read(os.path.join(OUT, rel))
     for i, line in enumerate(text.split("\n"), 1):
         if re.search(r"(?<!\$)\{\{", line):
