@@ -35,10 +35,11 @@ read_only: false              # true → the agent gets a read-only tool allowli
 default_lanes:                # path globs; "!" excludes; {{paths.x}} resolves from team.config.yaml
   - "{{paths.frontend}}/**"
   - "!{{paths.i18n}}/**"
-hands_over:                   # role id → what goes to it
+hands_over:                   # role id → what goes to it; "*" → a full sentence ("… goes to its owner")
   copy: wording and translations
-summary: >-                   # becomes the agent's `description` (drives auto-routing)
-  Owns the front-end code ...
+tagline: "Front-end code: ..."  # one line for the roster and CLAUDE.md lists
+summary: >-                   # the agent's `description` (drives auto-routing); starts with the title
+  Front-end engineer: owns the front-end code ... Wording goes to {{role:copy}}.
 ---
 ```
 
@@ -60,6 +61,8 @@ summary: >-                   # becomes the agent's `description` (drives auto-r
 | `{{i18n.languages}}` / `{{i18n.source}}` | the language list / source language |
 | `{{shared_rules}}` | the fixed pointer to *Rules every persona carries* (see `templates/shared-rules.md`) |
 | `{{push_policy}}` | the paragraph for `conventions.push_policy` (architect only) |
+
+Rendering is done by [`scripts/render.py`](../scripts/render.py), which is the specification: `{{owner}}` is capitalised at the start of a sentence, list item or table cell; a lane whose `{{paths.x}}` is unset or `none` is dropped; an exclusion outside every included path is dropped; a hand-over to a disabled role goes to the owner. In review gates, the reviewer `consumer` means the agent that consumes the changed contract.
 
 Other front-matter keys: `tier_floor` (the tier is never set lower, used by `security`), `renders_to: claude-md` (the architect goes into `CLAUDE.md`, not an agent file).
 

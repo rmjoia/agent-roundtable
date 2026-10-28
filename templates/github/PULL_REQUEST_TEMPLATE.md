@@ -11,8 +11,8 @@ Closes #
 
 <!-- docs/team-roster.md → Attribution. Matches the agent:<name> / reviewed:<name> labels. Each review states what it challenged and why it held. Delete this section for a human-authored PR. -->
 
-- **Written by**: <!-- e.g. hermes (opus) -->
-- **Reviewed by**: <!-- e.g. argus (opus) GREEN · hestia (opus) aligned · nemesis (opus) test quality -->
+- **Written by**: <!-- <agent> (<model>), one per authoring agent -->
+- **Reviewed by**: <!-- <agent> (<model>) <verdict>, one per review in the gate (docs/team-roster.md → Review gate) -->
 
 ## Docs
 

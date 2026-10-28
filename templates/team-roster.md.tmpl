@@ -114,7 +114,7 @@ At most 2 agents in parallel unless their paths are disjoint; reviews are batche
 
 | Review | By | When | Lens |
 |---|---|---|---|
-| Self-review | each authoring agent | always | the Definition of good code and the self-review lens, before the first push |
+| Self-review | each authoring agent | every PR | the Definition of good code and the self-review lens, before the first push |
 <!-- render: one row per entry in review_gates whose reviewers are enabled; "when" in words: always / every PR that changes code or tests / every PR that changes behaviour / every PR that changes a user-facing surface / PRs that change product rules, pricing or claims / PRs that change a contract (the consuming agent) / PRs that change infra or pipelines -->
 
 **Challenge, never nod.** A review checks the diff against the project's principles and the Definition of good code, and names where a better-suited pattern fits, with a cited reason. An approval states what was challenged and why it held; "looks good" is not a review.

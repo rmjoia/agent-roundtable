@@ -125,7 +125,8 @@ properties:
       required: [id, reviewers, when]
       properties:
         id: { $ref: "#/$defs/slug" }
-        reviewers: { type: array, items: { type: string }, minItems: 1, description: "Role ids" }
+        label: { type: string, description: "Display name in the roster; defaults to the id" }
+        reviewers: { type: array, items: { type: string }, minItems: 1, description: "Role ids, or \"consumer\" for the agent that consumes a changed contract" }
         when: { $ref: "#/$defs/when" }
         lens: { type: string }
 

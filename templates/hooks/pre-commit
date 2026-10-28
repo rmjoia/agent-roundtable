@@ -24,10 +24,11 @@ LOG_DIR="$(mktemp -d)"
 trap 'rm -rf "$LOG_DIR"' EXIT
 
 # Secrets and identifiers in the staged content. Patterns are deliberately
-# conservative; extend them in scripts/scrub-patterns.txt if the file exists.
+# conservative; add private ones (product, domain, people's names) to the git-ignored
+# .scrub-patterns.local, one extended regex per line.
 SCAN_PATTERNS='-----BEGIN [A-Z ]*PRIVATE KEY-----|AKIA[0-9A-Z]{16}|ghp_[A-Za-z0-9]{36}|gho_[A-Za-z0-9]{36}|github_pat_[A-Za-z0-9_]{50,}|xox[baprs]-[A-Za-z0-9-]{10,}|sk-[A-Za-z0-9]{32,}|AccountKey=[A-Za-z0-9+/=]{20,}'
-if [ -f "$REPO_ROOT/scripts/scrub-patterns.txt" ]; then
-  EXTRA="$(grep -v '^#' "$REPO_ROOT/scripts/scrub-patterns.txt" | grep -v '^$' | paste -sd '|' -)"
+if [ -f "$REPO_ROOT/.scrub-patterns.local" ]; then
+  EXTRA="$(grep -v '^#' "$REPO_ROOT/.scrub-patterns.local" | grep -v '^$' | paste -sd '|' -)"
   [ -n "$EXTRA" ] && SCAN_PATTERNS="$SCAN_PATTERNS|$EXTRA"
 fi
 if git diff --cached -U0 | grep '^+' | grep -v '^+++' | grep -nE -- "$SCAN_PATTERNS" > "$LOG_DIR/scan.log"; then

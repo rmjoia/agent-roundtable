@@ -63,13 +63,13 @@ roles:
   steward:         { enabled: true, tier: balanced }
 
 review_gates:
-  - { id: self-review,    reviewers: [architect],      when: always,    lens: "self-review lens, design and contract" }
+  - { id: architect-review, label: Architecture and contract, reviewers: [architect], when: always, lens: "the design, the contract, lane boundaries; the self-review lens on every delta" }
   - { id: security,       reviewers: [security],       when: always,    lens: "OWASP Top 10 and data protection" }
   - { id: plan-alignment, reviewers: [product-owner],  when: always,    lens: "story, acceptance criteria, Definition of Done" }
   - { id: test-quality,   reviewers: [qa],             when: code,      lens: "tests prove behaviour; pyramid; impacted tests" }
   - { id: docs,           reviewers: [docs],           when: behaviour, lens: "docs delta matches the change" }
   - { id: usability,      reviewers: [frontend, copy], when: ui,        lens: "real-browser walk: narrow and desktop, keyboard, every language" }
-  - { id: contract,       reviewers: [],               when: contract,  lens: "the consuming role reviews" }
+  - { id: contract,       reviewers: [consumer],       when: contract,  lens: "the consumer builds against it and its golden examples" }
 
 i18n:
   languages: [en-GB, de-DE]
