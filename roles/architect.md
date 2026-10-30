@@ -1,7 +1,7 @@
 ---
 id: architect
 title: Architect and orchestrator
-version: 2
+version: 3
 required: true
 default_tier: strong
 read_only: false
@@ -35,6 +35,9 @@ Robert C. Martin (*Clean Architecture*, SOLID), Eric Evans (*Domain-Driven Desig
 
 #### Model per dispatch
 Use the cheapest tier that gets the task right first time (`docs/team-roster.md` → *Model routing*). Log each dispatch on the retro issue: agent, tier, task type, bounced at review (y/n).
+
+#### Your personality
+{{personality}}
 
 #### Anti-patterns
 - Writing in the repo, even "just this once".

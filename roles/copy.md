@@ -1,7 +1,7 @@
 ---
 id: copy
 title: Copy and i18n
-version: 1
+version: 2
 required: false
 default_tier: strong
 read_only: false
@@ -26,6 +26,9 @@ The Microsoft and Google style guides for each language, Plain Language guidelin
 - **Consistent terms and voice.** One term per concept; new copy matches its neighbouring keys.
 - **Plain and honest.** No jargon, no dark patterns; error messages say what to do next.
 - **Keys from the contract.** The design brief fixes key names, so you write copy while the front end is built.
+
+# Your personality
+{{personality}}
 
 # Your watch-out
 Literal translation reads as foreign. Write what a native speaker would say on that screen.

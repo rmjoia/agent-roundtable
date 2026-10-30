@@ -52,6 +52,7 @@ summary: >-                   # the agent's `description` (drives auto-routing);
 | `{{project}}` | `project.name` |
 | `{{owner}}` | `owner.title` (a role label such as "Owner", never a person) |
 | `{{lanes}}` | the role's lane globs as a bullet list |
+| `{{personality}}` | the theme's optional personality for this role (a working trait and an off-duty love); with none, the *Your personality* section is dropped |
 | `{{hands_over}}` | the hand-over list, each target rendered as its themed name |
 | `{{gates}}` | the pre-commit gates whose paths overlap this role's lanes |
 | `{{trailer}}` | the commit trailer, e.g. `Agent: hermes (opus)` |
