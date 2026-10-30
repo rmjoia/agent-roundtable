@@ -10,6 +10,7 @@ All notable changes to this template. Adopters see the entries newer than their 
 - `scripts/install.sh` also copies `adapters/` and `prompts/`.
 
 ### Changed
+- A shared *Working mind* rule (curious and evidence-first, ego-light, quality in proportion to risk, pride in doing the right thing right) and a roster charter line: the right thing, done right, managed and planned right.
 - Personas gain an optional *Your personality* section: a theme's `personality` per role (a working trait and an off-duty love), rendered by `{{personality}}` and dropped when a theme has none. `arthurian` carries all 13; other themes are unchanged. A shared rule (and a roster line) say personality colours the voice, never the work: it never overrides the charter, the lane, the honesty pact or the report limits. Role versions bumped.
 - Personas name the craft they stand on: Robert C. Martin, Kent Beck, Michael Feathers, Mark Seemann, Martin Fowler, Freeman and Pryce, Farley and Humble, where each fits (architect, front end, both back ends, QA, DevOps; role versions bumped).
 - `neutral` pack: an *Influences* section, and *Working with existing code* (characterisation tests, seams, small behaviour-preserving refactors, sprout and wrap).
