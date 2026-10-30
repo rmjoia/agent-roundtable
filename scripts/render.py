@@ -127,11 +127,12 @@ for rid in ORDER:
     themed = theme.get(rid) or {}
     name = rc.get("name") or themed.get("name") or neutral[rid]["name"]
     flavour = "" if rc.get("name") else themed.get("flavour", "")
+    personality = "" if rc.get("name") else themed.get("personality", "")
     tier = rc.get("tier") or fm["default_tier"]
     floor = fm.get("tier_floor")
     if floor and TIERS.index(tier) < TIERS.index(floor):
         tier = floor
-    roles[rid] = dict(fm=fm, body=body, Name=name, slug=slugify(name), flavour=flavour,
+    roles[rid] = dict(fm=fm, body=body, Name=name, slug=slugify(name), flavour=flavour, personality=personality,
                       tier=tier, model=models[tier], rc=rc)
 
 slugs = [r["slug"] for r in roles.values()]
@@ -222,6 +223,10 @@ def subst(text, rid=None):
         lanes = resolve_lanes(rid)
         text = text.replace("{{Name}}", r["Name"]).replace("{{name}}", r["slug"])
         text = text.replace("{{flavour}}", r["flavour"])
+        if r["personality"]:
+            text = text.replace("{{personality}}", r["personality"])
+        else:  # no personality: drop the heading with its slot
+            text = re.sub(r"^#+ Your personality\n\{\{personality\}\}\n\n", "", text, flags=re.M)
         text = text.replace("{{lanes}}", lane_bullets(lanes) or "  - nothing in the repo")
         text = text.replace("{{hands_over}}", "\n".join(f"  - {h}" for h in hand_overs(rid)))
         text = text.replace("{{gates}}", gates_for(lanes))

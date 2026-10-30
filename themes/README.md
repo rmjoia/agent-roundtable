@@ -1,6 +1,6 @@
 # Themes
 
-A theme gives each role a **name** and a one-line **flavour**. Names make a team easier to talk to ("send it to Hermes") and make labels, trailers and reports readable. They change nothing about what a role does: the [role template](../roles/README.md) is canonical.
+A theme gives each role a **name** and a one-line **flavour**, and optionally a short **personality** (a working trait and something they love off duty). Names make a team easier to talk to ("send it to Hermes") and make labels, trailers and reports readable. They change nothing about what a role does: the [role template](../roles/README.md) is canonical.
 
 ## Shipped themes
 
@@ -31,7 +31,7 @@ source: our own names            # say where the names come from
 roles:                           # one entry per role you enable; the architect is required
   architect:  { name: Ada,   flavour: "Designs and routes; writes nothing in the repo." }
   security:   { name: Grace, flavour: "Watches every PR for security and privacy." }
-  frontend:   { name: Alan,  flavour: "Owns the surface people see." }
+  frontend:   { name: Alan,  flavour: "Owns the surface people see.", personality: "Patient; off duty he restores old radios." }  # personality is optional
 ```
 
 Then set `theme: local/my-team` in `team.config.yaml` and run `/init-team`.
